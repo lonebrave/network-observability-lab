@@ -1,0 +1,47 @@
+[agent]
+  # Set hostname (defaults to container id)
+  hostname = 'telegraf-02'
+
+[[inputs.gnmi]]
+  # gNMI targets (port 50051 on ceos devices)
+  addresses = ['ceos-02:50051']
+  # Credentials for device connection
+  username = '${NETWORK_AGENT_USER}'
+  password = '${NETWORK_AGENT_PASSWORD}'
+  # Retries in case of failure
+  redial = '20s'
+
+# gNMI Subscriptions
+[[inputs.gnmi.subscription]]
+  # Metric namespace name
+  name = 'interface'
+  # YANG path for interface counters
+  path = '/interfaces/interface/state/counters'
+  # Subscriptions ('target_defined', 'sample', 'on_change')
+  subscription_mode = 'sample'
+  # Interval for each sample
+  sample_interval = '10s'
+
+[[inputs.gnmi.subscription]]
+  name = 'interface'
+  # Path to collect inferface oper-status
+  path = '/interfaces/interface/state/oper-status'
+  subscription_mode = 'sample'
+  sample_interval = '10s'
+
+# Read metrics from commands outputting to stdout
+[[inputs.exec]]
+  # Commands executing the python script
+  commands = [
+    'python /etc/telegraf/script.py arista_eos ceos-02'
+  ]
+  # Interval between script executions
+  interval = '30s'
+  # Timeout for each command
+  timeout = '5s'
+  # Data format
+  data_format = 'influx'
+
+# Outputs metrics to stdout
+[[outputs.file]]
+  files = ['stdout']
