@@ -1,0 +1,63 @@
+[agent]
+# set hostname (defaults to container id)
+hostname = 'telegraf-01'
+
+[[inputs.snmp]]
+  # SNMP targets
+  agents = ['ceos-01']
+  # SNMP version
+  version = 2
+  # SNMP community string
+  community = "${SNMP_COMMUNITY}"
+  # Polling interval, timeout, retries
+  interval = '60s'
+  timeout = '10s'
+  retries = 3
+
+# Uptime Metric
+[[inputs.snmp.field]]
+  # Metric name override to 'uptime'
+  name = 'uptime'
+  # SNMP OID RFC1213-MIB::sysUptTime.0
+  oid = '1.3.6.1.2.1.1.3.0'
+
+# Interface Metrics
+[[inputs.snmp.table]]
+  # Metrics name
+  name = 'Interface'
+
+# Retrieve specific field from table
+[[inputs.snmp.table.field]]
+  # Field name override
+  name = 'name'
+  # SNMP OID for Interface Name IF-MIB::ifDescr
+  oid = '1.3.6.1.2.1.2.2.1.2'
+  # Set Interface name as tag
+  is_tag = true
+
+# Collect specific fields from table walk
+[[inputs.snmp.table.field]]
+  name = 'in_octets'
+  # SNMP OID IF-MIB::ifHCInOctets
+  oid = '1.3.6.1.2.1.31.1.1.1.6'
+
+[[inputs.snmp.table.field]]
+  name = 'out_octets'
+  # SNMP OID IF-MIB::ifHCOutOctets
+  oid = '1.3.6.1.2.1.31.1.1.1.10'
+
+[[inputs.ping]]
+  # Interval time between ping commands
+  interval = '10s'
+  # Number of ping packets to send per interval
+  count = 3
+  # Time to wait between sending ping packets in seconds
+  ping_interval = 1.0
+  # Tiem to wait for a ping response in seconds
+  timeout = 5.0
+  # Hosts to send ping packets to
+  urls = ['ceos-01']
+
+# Output metrics to stdout
+[[outputs.file]]
+  files = ['stdout']
