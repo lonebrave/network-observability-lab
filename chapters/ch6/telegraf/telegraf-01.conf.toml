@@ -39,5 +39,30 @@
     tag = 'agent_host'
     dest = 'device'
 
+[[processors.regex]]
+  # Filter metrcis that have 'interface' name
+  namepass = ['interface']
+
+  # Regex processor operation on the metric tags
+  [[processors.regex.tags]]
+    # Name of the tag to match
+    key = 'name'
+    # Regex pattern to match
+    pattern = '^Ethernet.*$'
+    # Name of the new tag
+    result_key = 'intf_role'
+    # Replacement string
+    replacement = 'peer'
+
+  [[processors.regex.tags]]
+    # Name of the tag to match
+    key = 'name'
+    # Regex pattern to match
+    pattern = '^Management.*$'
+    # Name of the new tag
+    result_key = 'intf_role'
+    # Replacement string
+    replacement = 'mgmt'
+
 [[outputs.file]]
  files = ["stdout"]
