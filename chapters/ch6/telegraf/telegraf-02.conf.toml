@@ -29,5 +29,13 @@
     tag = 'source'
     dest = 'device'
 
+[[processors.execd]]
+  # Filter for 'interface' metrcis
+  namepass = ['interface']
+  # Run the Nautobot data enrichment subscription
+  command = ['python', '/etc/telegraf/script.py']
+  # If script quits unexpectedly, wait 10 seconds before restarting
+  restart_delay = '10s'
+
 [[outputs.file]]
   files = ["stdout"]
