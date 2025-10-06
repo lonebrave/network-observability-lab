@@ -208,3 +208,7 @@
 ##############################################################################
 [[outputs.file]]
   files = ["stdout"]
+
+[[outputs.prometheus_client]]
+  # HTTP port to listen on
+  listen = ":9005"
