@@ -11,7 +11,7 @@
  retries = 3
 
   # Tag to identify the stage of the data pipeline
-  [[inputs.snmp.tags]]
+  [inputs.snmp.tags]
     data_type = 'raw'
   
   [[inputs.snmp.table]]

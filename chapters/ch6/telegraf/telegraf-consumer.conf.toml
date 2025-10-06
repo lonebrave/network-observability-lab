@@ -1,0 +1,24 @@
+# Consume kafka data
+[[inputs.kafka_consumer]]
+  brokers = ['kafka-01:29092']
+  topics = ['telegraf-data-collection']
+
+  # Add Kafka tag specifying kafka broker
+  [inputs.kafka_consumer.tags]
+    kafka_pipline = 'kafka-01'
+
+# Update the data_type tag
+[[processors.regex]]
+  namepass = ['interface']
+
+  [[processors.regex.tagpass]]
+    data_type = 'raw'
+
+  [[processors.regex.tags]]
+    key = 'data_type'
+    pattern = '^raw$'
+    replacement = 'kafka_distributed'
+
+[[outputs.file]]
+  files = ['stdout']
+  
