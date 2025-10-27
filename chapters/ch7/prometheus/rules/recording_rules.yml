@@ -5,3 +5,7 @@ groups:
       expr: sum(rate(interface_in_octets[2m])) by(device) * 8
     - record: device:network_traffic_out_bps:rate_2m
       expr: sum(rate(interface_out_octets[2m])) by(device) *8
+  - name: interface_updown_events
+    rules:
+    - record: device:interface_updown_rate:2m
+      expr: events:interface_updown_rate:2m or (sum by(device) (interface_admin_status) *0)
